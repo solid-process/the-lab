@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_21_115028) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_22_205854) do
   create_table "accounts", force: :cascade do |t|
     t.string "uuid", null: false
     t.datetime "created_at", null: false
@@ -27,6 +27,20 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_21_115028) do
     t.index ["account_id", "user_id"], name: "index_memberships_on_account_id_and_user_id", unique: true
     t.index ["account_id"], name: "index_memberships_on_account_id"
     t.index ["user_id"], name: "index_memberships_on_user_id"
+  end
+
+  create_table "solid_process_event_logs", force: :cascade do |t|
+    t.string "root_name", null: false
+    t.string "trace_id"
+    t.integer "version", null: false
+    t.integer "duration", null: false
+    t.json "ids", default: {}, null: false
+    t.json "records", default: [], null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["duration"], name: "index_solid_process_event_logs_on_duration"
+    t.index ["root_name"], name: "index_solid_process_event_logs_on_root_name"
+    t.index ["trace_id"], name: "index_solid_process_event_logs_on_trace_id"
   end
 
   create_table "task_lists", force: :cascade do |t|

@@ -4,8 +4,12 @@ require "solid/validators/persisted_validator"
 require "solid/validators/respond_to_validator"
 require "solid/validators/instance_of_validator"
 
+require "solid/process/event_logs_record"
 require "rails_event_logs_logger_listener"
 
 Solid::Result.configuration do |config|
-  config.event_logs.listener = RailsEventLogsLoggerListener
+  config.event_logs.listener = Solid::Result::EventLogs::Listeners[
+    RailsEventLogsLoggerListener,
+    Solid::Process::EventLogsRecord::Listener
+  ]
 end
