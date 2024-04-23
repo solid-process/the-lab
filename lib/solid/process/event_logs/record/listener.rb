@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-class Solid::Process::EventLogsRecord
-  class Listener
+module Solid::Process::EventLogs
+  class Record::Listener
     include ::Solid::Result::EventLogs::Listener
 
     def on_finish(event_logs:)
-      Executor.post { create_event_logs_record(event_logs) }
+      Record::Executor.post { create_event_logs_record(event_logs) }
     end
 
     private
@@ -17,14 +17,14 @@ class Solid::Process::EventLogsRecord
         record.deep_transform_values { _1.is_a?(::Solid::Process) ? _1.class.name : _1 }
       end
 
-      Rails.error.record do
-        Solid::Process::EventLogsRecord.create!(
+      ::Rails.error.record do
+        Record.create!(
           version: event_logs[:version],
           root_name: root_name,
           trace_id: metadata[:trace_id],
           duration: metadata[:duration],
           ids: metadata[:ids],
-          records: Records.serialize(records)
+          records: JsonStorage::Records.serialize(records)
         )
       end
     rescue => e
