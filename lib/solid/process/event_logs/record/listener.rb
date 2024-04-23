@@ -23,9 +23,7 @@ module Solid::Process::EventLogs
     def create_record!(event_logs)
       root_name = event_logs.dig(:records, 0, :root, :name) || "Unknown"
       metadata = event_logs[:metadata]
-      records = event_logs[:records].map do |record|
-        record.deep_transform_values { _1.is_a?(::Solid::Process) ? _1.class.name : _1 }
-      end
+      records = JsonStorage::Records.serialize(event_logs[:records])
 
       ::Rails.error.record do
         Record.create!(
@@ -34,7 +32,7 @@ module Solid::Process::EventLogs
           trace_id: metadata[:trace_id],
           duration: metadata[:duration],
           ids: metadata[:ids],
-          records: JsonStorage::Records.serialize(records)
+          records: records
         )
       end
     end

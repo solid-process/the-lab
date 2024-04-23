@@ -11,5 +11,6 @@ module Solid::Process::EventLogs::JsonStorage
   end
 
   require_relative "json_storage/s11n"
+  require_relative "json_storage/serializer"
   require_relative "json_storage/records"
 end

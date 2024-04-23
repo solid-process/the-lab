@@ -2,57 +2,67 @@
 
 module Solid::Process::EventLogs::JsonStorage
   module Records
-    extend self
+    require_relative "records/filter"
 
-    INTERMEDIATE_TYPES = %w[_continue_ _given_].freeze
+    SerializeResultSource = lambda do |source|
+      return unless source
 
-    def filter_main(hash)
-      hash.filter_map do |item|
-        current_id = (item["current"] || item[:current]).then { _1["value"] || _1[:value] }
-
-        result_type = (item["result"] || item[:result]).then { _1["type"] || _1[:type] }
-
-        item if (result_type == "_given_" && current_id == 0) || !result_type.in?(INTERMEDIATE_TYPES)
-      end
+      source.is_a?(Module) ? source.name : source.class.name
     end
 
-    def serialize(value)
-      case value
-      when nil, true, false, Integer, Float then value
-      when Hash then serialize_hash(value)
-      when Array then value.map { |val| serialize(val) }
-      when String then S11n::String.serialize(value)
-      when Solid::Model then S11n::SolidModel.serialize(value)
-      when GlobalID::Identification then S11n::GlobalId.serialize(value)
-      else
-        value
-      end
+    def self.serialize(array)
+      array.map { serialize_one(_1) }
     end
 
-    def deserialize(value)
-      case value
-      when nil, true, false, String, Integer, Float then value
-      when Hash then deserialize_hash(value)
-      when Array then value.map { |val| deserialize(val) }
-      else raise ArgumentError, "Can only deserialize primitive arguments: #{value.inspect}"
-      end
-    rescue
-      raise DeserializationError
+    def self.serialize_one(hash)
+      result = hash[:result].dup
+      result[:value] = result[:value].transform_values { Serializer.serialize(_1) }
+      result[:source] = SerializeResultSource.call(result[:source])
+
+      and_then = hash[:and_then].dup
+      and_then[:arg] = and_then[:arg].transform_values { Serializer.serialize(_1) } if and_then[:arg]
+
+      {
+        root: hash[:root],
+        parent: hash[:parent],
+        current: hash[:current],
+        result: result,
+        and_then: and_then,
+        time: hash[:time].iso8601(5)
+      }
     end
 
-    private
-
-    def serialize_hash(value)
-      value.each_with_object({}) do |(key, value), hash|
-        hash[S11n::Hash.key(key)] = serialize(value)
-      end
+    def self.deserialize(array)
+      array.map { deserialize_one(_1) }
     end
 
-    def deserialize_hash(value)
-      return S11n::GlobalId.deserialize(value) if S11n::GlobalId.serialized?(value)
-      return S11n::SolidModel.deserialize(value) if S11n::SolidModel.serialized?(value)
+    def self.deserialize_one(hash)
+      result = hash["result"].each_with_object({}) do |(key, val), memo|
+        memo[key.to_sym] = (key == "value") ? val : val.to_sym
+      end
 
-      value.transform_values { deserialize(_1) }.symbolize_keys
+      result[:value] = result[:value].each_with_object({}) do |(key, val), memo|
+        memo[key.to_sym] = Serializer.deserialize(val)
+      end
+
+      and_then = hash["and_then"].each_with_object({}) do |(key, val), memo|
+        memo[key.to_sym] = (key == "arg") ? val : val.to_sym
+      end
+
+      if and_then[:arg]
+        and_then[:arg] = and_then[:arg].each_with_object({}) do |(key, val), memo|
+          memo[key.to_sym] = Serializer.deserialize(val)
+        end
+      end
+
+      {
+        root: hash["root"].symbolize_keys!,
+        parent: hash["parent"].symbolize_keys!,
+        current: hash["current"].symbolize_keys!,
+        result: result,
+        and_then: and_then,
+        time: Time.zone.parse(hash["time"])
+      }
     end
   end
 end

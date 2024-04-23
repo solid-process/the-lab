@@ -15,7 +15,7 @@ module Solid::Process::EventLogs
     end
 
     def raw_main_records
-      JsonStorage::Records.filter_main(raw_records)
+      JsonStorage::Records::Filter.only_main(raw_records)
     end
 
     def records

@@ -9,11 +9,15 @@ module Solid::Process::EventLogs::JsonStorage
     end
 
     def self.serialize(value)
-      {KEY => {"class_name" => value.class.name, "attributes" => value.attributes}}
+      attributes = value.attributes.transform_values { Serializer.serialize(_1) }
+
+      {KEY => {"class_name" => value.class.name, "attributes" => attributes}}
     end
 
     def self.deserialize(value)
       class_name, attributes = value[KEY].fetch_values("class_name", "attributes")
+
+      attributes.transform_values! { Serializer.deserialize(_1) }
 
       class_name.constantize.new(attributes)
     end
