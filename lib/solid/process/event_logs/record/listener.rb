@@ -5,12 +5,22 @@ module Solid::Process::EventLogs
     include ::Solid::Result::EventLogs::Listener
 
     def on_finish(event_logs:)
-      Record::Executor.post { create_event_logs_record(event_logs) }
+      Record::Executor.post { create_record(event_logs) }
     end
 
     private
 
-    def create_event_logs_record(event_logs)
+    def create_record(event_logs)
+      create_record!(event_logs)
+    rescue => e
+      err = "#{e.message} (#{e.class}); Backtrace: #{e.backtrace.join(", ")}"
+
+      ::Rails.logger.warn "Error on #{self.class}#on_finish: #{err}"
+
+      nil
+    end
+
+    def create_record!(event_logs)
       root_name = event_logs.dig(:records, 0, :root, :name) || "Unknown"
       metadata = event_logs[:metadata]
       records = event_logs[:records].map do |record|
@@ -27,10 +37,6 @@ module Solid::Process::EventLogs
           records: JsonStorage::Records.serialize(records)
         )
       end
-    rescue => e
-      err = "#{e.message} (#{e.class}); Backtrace: #{e.backtrace.join(", ")}"
-
-      ::Rails.logger.warn "Error on #{self.class}#on_finish: #{err}"
     end
   end
 end

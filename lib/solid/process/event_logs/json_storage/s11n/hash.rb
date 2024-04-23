@@ -4,12 +4,13 @@ module Solid::Process::EventLogs::JsonStorage
   module S11n::Hash
     extend self
 
-    RESERVED_KEYS = [
-      S11n::GlobalId::KEY, S11n::GlobalId::KEY.to_sym
+    RESERVED_KEYS = Set[
+      S11n::GlobalId::KEY, S11n::GlobalId::KEY.to_sym,
+      S11n::SolidModel::KEY, S11n::SolidModel::KEY.to_sym
     ].freeze
 
     def key(arg)
-      raise reserved_key_error(arg) if arg.in?(RESERVED_KEYS)
+      raise reserved_key_error(arg) if RESERVED_KEYS.include?(arg)
 
       case arg
       when ::String, ::Symbol then arg.to_s

@@ -8,13 +8,24 @@ module Solid::Process::EventLogs::JsonStorage
 
     def filter_main(hash)
       hash.filter_map do |item|
-        result = item["result"] || item[:result]
-        type = result["type"] || result[:type]
+        current_id = (item["current"] || item[:current]).then { _1["value"] || _1[:value] }
 
-        current = item["current"] || item[:current]
-        current_id = current["id"] || current[:id]
+        result_type = (item["result"] || item[:result]).then { _1["type"] || _1[:type] }
 
-        item if (type == "_given_" && current_id == 0) || !type.in?(INTERMEDIATE_TYPES)
+        item if (result_type == "_given_" && current_id == 0) || !result_type.in?(INTERMEDIATE_TYPES)
+      end
+    end
+
+    def serialize(value)
+      case value
+      when nil, true, false, Integer, Float then value
+      when Hash then serialize_hash(value)
+      when Array then value.map { |val| serialize(val) }
+      when String then S11n::String.serialize(value)
+      when Solid::Model then S11n::SolidModel.serialize(value)
+      when GlobalID::Identification then S11n::GlobalId.serialize(value)
+      else
+        value
       end
     end
 
@@ -29,18 +40,6 @@ module Solid::Process::EventLogs::JsonStorage
       raise DeserializationError
     end
 
-    def serialize(value)
-      case value
-      when nil, true, false, Integer, Float then value
-      when Hash then serialize_hash(value)
-      when Array then value.map { |val| serialize(val) }
-      when String then S11n::String.serialize(value)
-      when GlobalID::Identification then S11n::GlobalId.serialize(value)
-      else
-        value
-      end
-    end
-
     private
 
     def serialize_hash(value)
@@ -50,13 +49,10 @@ module Solid::Process::EventLogs::JsonStorage
     end
 
     def deserialize_hash(value)
-      if S11n::GlobalId.serialized?(value)
-        S11n::GlobalId.deserialize(value)
-      else
-        value
-          .transform_values { |v| deserialize(v) }
-          .symbolize_keys
-      end
+      return S11n::GlobalId.deserialize(value) if S11n::GlobalId.serialized?(value)
+      return S11n::SolidModel.deserialize(value) if S11n::SolidModel.serialized?(value)
+
+      value.transform_values { deserialize(_1) }.symbolize_keys
     end
   end
 end

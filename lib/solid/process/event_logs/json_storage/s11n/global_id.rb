@@ -2,23 +2,21 @@
 
 module Solid::Process::EventLogs::JsonStorage
   module S11n::GlobalId
-    extend self
-
     KEY = "sp_globalid"
 
-    def serialized?(value)
+    def self.serialized?(value)
       value.size == 1 && value.key?(KEY)
     end
 
-    def deserialize(value)
-      ::GlobalID::Locator.locate(value[KEY])
-    end
-
-    def serialize(value)
+    def self.serialize(value)
       {KEY => value.to_global_id.to_s}
     rescue ::URI::GID::MissingModelIdError
       raise SerializationError, "Unable to serialize #{value.class} " \
         "without an id. (Maybe you forgot to call save?)"
+    end
+
+    def self.deserialize(value)
+      ::GlobalID::Locator.locate(value[KEY])
     end
   end
 end
