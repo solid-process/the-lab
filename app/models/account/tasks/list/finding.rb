@@ -5,7 +5,7 @@ class Account::Tasks::List::Finding < Solid::Process
     attribute :id, :integer
     attribute :account
 
-    validates :id, numericality: {only_integer: true, greater_than: 0}
+    validates :id, id: true
     validates :account, instance_of: [Account, Account::Member]
   end
 

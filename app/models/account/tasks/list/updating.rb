@@ -10,7 +10,7 @@ class Account::Tasks::List::Updating < Solid::Process
       self.name = name&.strip
     end
 
-    validates :id, numericality: {only_integer: true, greater_than: 0}
+    validates :id, id: true
     validates :name, presence: true
     validates :account, instance_of: [Account, Account::Member]
   end

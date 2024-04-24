@@ -9,7 +9,7 @@ class User::Authentication < Solid::Process
       self.email = User::Email::NORMALIZATION[email]
     end
 
-    validates :email, User::Email::VALIDATIONS
+    validates :email, email: true
     validates :password, User::Password::VALIDATIONS
   end
 

@@ -9,7 +9,7 @@ class User::Password::Updating < Solid::Process
     attribute :password_confirmation, :string
     attribute :current_password, :string, default: ""
 
-    validates :user, instance_of: User, persisted: true
+    validates :user, instance_of: User, is: :persisted?
     validates :password, User::Password::VALIDATIONS_WITH_CONFIRMATION
     validates :current_password, User::Password::VALIDATIONS
   end

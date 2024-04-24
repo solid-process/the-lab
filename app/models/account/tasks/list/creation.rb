@@ -11,7 +11,7 @@ class Account::Tasks::List::Creation < Solid::Process
     end
 
     validates :name, presence: true
-    validates :account, instance_of: [Account, Account::Member], persisted: true
+    validates :account, instance_of: [Account, Account::Member], is: :persisted?
   end
 
   def call(attributes)
