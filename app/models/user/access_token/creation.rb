@@ -5,7 +5,7 @@ class User::AccessToken::Creation < Solid::Process
     attribute :user
     attribute :access_token, default: -> { User::AccessToken.new }
 
-    validates :user, instance_of: User, persisted: true
+    validates :user, instance_of: User, is: :persisted?
     validates :access_token, instance_of: User::AccessToken
   end
 

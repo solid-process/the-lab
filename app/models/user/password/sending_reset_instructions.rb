@@ -8,7 +8,7 @@ class User::Password::SendingResetInstructions < Solid::Process
       self.email = User::Email::NORMALIZATION[email]
     end
 
-    validates :email, User::Email::VALIDATIONS
+    validates :email, email: true
   end
 
   def call(attributes)

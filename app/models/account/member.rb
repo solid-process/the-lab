@@ -10,7 +10,7 @@ class Account::Member
 
   validates :user_token, presence: true, unless: :user_id?
 
-  with_options numericality: {only_integer: true, greater_than: 0} do
+  with_options id: true do
     validates :user_id, presence: true, unless: :user_token?
     validates :account_id, allow_nil: true
     validates :task_list_id, allow_nil: true
