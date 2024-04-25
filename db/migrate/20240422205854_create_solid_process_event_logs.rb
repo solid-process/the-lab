@@ -7,7 +7,7 @@ class CreateSolidProcessEventLogs < ActiveRecord::Migration[7.1]
       t.integer :duration, null: false, index: true
       t.json :ids, null: false, default: {}
       t.json :records, null: false, default: []
-      t.timestamps
+      t.datetime :created_at, null: false, index: true
     end
   end
 end
