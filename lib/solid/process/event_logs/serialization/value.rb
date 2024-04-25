@@ -1,7 +1,12 @@
 # frozen_string_literal: true
 
-module Solid::Process::EventLogs::JsonStorage
-  module Serializer
+module Solid::Process::EventLogs::Serialization
+  module Value
+    require_relative "value/active_job"
+    require_relative "value/global_id"
+    require_relative "value/solid_model"
+    require_relative "value/hash_object"
+
     extend self
 
     def serialize(value)
@@ -10,18 +15,18 @@ module Solid::Process::EventLogs::JsonStorage
       when Hash then serialize_hash(value)
       when Array then value.map { |val| serialize(val) }
       when String then serialize_string(value)
-      when Solid::Model then S11n::SolidModel.serialize(value)
-      when GlobalID::Identification then S11n::GlobalId.serialize(value)
+      when Solid::Model then Value::SolidModel.serialize(value)
+      when GlobalID::Identification then Value::GlobalId.serialize(value)
       when ActiveSupport::HashWithIndifferentAccess then serialize_indifferent_hash(value)
       else
         if value.respond_to?(:permitted?) && value.respond_to?(:to_h)
           serialize_indifferent_hash(value.to_h)
         else
-          S11n::ActiveJob.serialize!(value)
+          Value::ActiveJob.serialize!(value)
         end
       end
     rescue
-      "S11N:ERR"
+      ERR_CODE
     end
 
     def deserialize(value)
@@ -32,7 +37,7 @@ module Solid::Process::EventLogs::JsonStorage
       else raise ArgumentError, "Can only deserialize primitive arguments: #{value.inspect}"
       end
     rescue
-      raise DeserializationError
+      raise LoadError
     end
 
     private
@@ -40,18 +45,18 @@ module Solid::Process::EventLogs::JsonStorage
     def serialize_hash(value)
       symbol_keys = value.each_key.grep(Symbol).map!(&:to_s)
 
-      serialize_hash!(value, S11n::HashObject::SYMBOL_KEYS_KEY => symbol_keys)
+      serialize_hash!(value, Value::HashObject::SYMBOL_KEYS_KEY => symbol_keys)
     end
 
     def serialize_indifferent_hash(value)
       result = serialize_hash!(value)
-      result[S11n::HashObject::WITH_INDIFFERENT_ACCESS_KEY] = serialize(true)
+      result[Value::HashObject::WITH_INDIFFERENT_ACCESS_KEY] = serialize(true)
       result
     end
 
     def serialize_hash!(hash, memo = {})
       hash.each_with_object(memo) do |(key, value), memo_hash|
-        memo_hash[S11n::HashObject.key(key)] = serialize(value)
+        memo_hash[Value::HashObject.key(key)] = serialize(value)
       end
     end
 
@@ -59,18 +64,18 @@ module Solid::Process::EventLogs::JsonStorage
     def serialize_string(value)
       return value if value.class == ::String
 
-      S11n::ActiveJob.serialize(value)
+      Value::ActiveJob.serialize(value)
     end
     # rubocop:enable Style/ClassEqualityComparison
 
     def deserialize_hash(value)
-      return S11n::GlobalId.deserialize(value) if S11n::GlobalId.serialized?(value)
-      return S11n::ActiveJob.deserialize(value) if S11n::ActiveJob.serialized?(value)
-      return S11n::SolidModel.deserialize(value) if S11n::SolidModel.serialized?(value)
+      return Value::GlobalId.deserialize(value) if Value::GlobalId.serialized?(value)
+      return Value::ActiveJob.deserialize(value) if Value::ActiveJob.serialized?(value)
+      return Value::SolidModel.deserialize(value) if Value::SolidModel.serialized?(value)
 
       hash = value.transform_values { deserialize(_1) }
 
-      S11n::HashObject.deserialize(hash)
+      Value::HashObject.deserialize(hash)
     end
   end
 end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module Solid::Process::EventLogs::JsonStorage
-  module S11n::HashObject
+module Solid::Process::EventLogs::Serialization
+  module Value::HashObject
     extend self
 
     SYMBOL_KEYS_KEY = "_sp_symbol_keys"
@@ -10,9 +10,9 @@ module Solid::Process::EventLogs::JsonStorage
     RESERVED_KEYS = Set[
       SYMBOL_KEYS_KEY, SYMBOL_KEYS_KEY.to_sym,
       WITH_INDIFFERENT_ACCESS_KEY, WITH_INDIFFERENT_ACCESS_KEY.to_sym,
-      S11n::GlobalId::KEY, S11n::GlobalId::KEY.to_sym,
-      S11n::ActiveJob::KEY, S11n::ActiveJob::KEY.to_sym,
-      S11n::SolidModel::KEY, S11n::SolidModel::KEY.to_sym
+      Value::GlobalId::KEY, Value::GlobalId::KEY.to_sym,
+      Value::ActiveJob::KEY, Value::ActiveJob::KEY.to_sym,
+      Value::SolidModel::KEY, Value::SolidModel::KEY.to_sym
     ].freeze
 
     def key(arg)
@@ -37,13 +37,13 @@ module Solid::Process::EventLogs::JsonStorage
     private
 
     def reserved_key_error(arg)
-      SerializationError.new("Can't serialize a Hash with reserved key #{arg.inspect}")
+      DumpError.new("Can't serialize a Hash with reserved key #{arg.inspect}")
     end
 
     def invalid_key_error(arg)
       message = "Only string and symbol hash keys may be serialized, but #{arg.inspect} is a #{arg.class}"
 
-      SerializationError.new(message)
+      DumpError.new(message)
     end
   end
 end

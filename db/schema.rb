@@ -37,7 +37,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_22_205854) do
     t.json "ids", default: {}, null: false
     t.json "records", default: [], null: false
     t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_solid_process_event_logs_on_created_at"
     t.index ["duration"], name: "index_solid_process_event_logs_on_duration"
     t.index ["root_name"], name: "index_solid_process_event_logs_on_root_name"
     t.index ["trace_id"], name: "index_solid_process_event_logs_on_trace_id"

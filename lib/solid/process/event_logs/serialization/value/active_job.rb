@@ -3,8 +3,8 @@
 require "active_job/arguments"
 require "active_job/serializers"
 
-module Solid::Process::EventLogs::JsonStorage
-  module S11n::ActiveJob
+module Solid::Process::EventLogs::Serialization
+  module Value::ActiveJob
     KEY = "_aj_serialized"
 
     def self.serialized?(value)

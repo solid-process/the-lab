@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module Solid::Process::EventLogs::JsonStorage
-  module S11n::GlobalId
+module Solid::Process::EventLogs::Serialization
+  module Value::GlobalId
     KEY = "sp_globalid"
 
     def self.serialized?(value)
@@ -11,7 +11,7 @@ module Solid::Process::EventLogs::JsonStorage
     def self.serialize(value)
       {KEY => value.to_global_id.to_s}
     rescue ::URI::GID::MissingModelIdError
-      raise SerializationError, "Unable to serialize #{value.class} " \
+      raise LoadError, "Unable to serialize #{value.class} " \
         "without an id. (Maybe you forgot to call save?)"
     end
 
