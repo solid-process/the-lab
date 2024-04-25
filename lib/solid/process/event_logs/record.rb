@@ -30,6 +30,10 @@ module Solid::Process::EventLogs
           Serialization::Records.deserialize(raw_main_records)
         end
     end
+
+    def self.ransackable_attributes(auth_object = nil)
+      %w[id root_name duration trace_id created_at]
+    end
   end
   # rubocop:enable Rails/ApplicationRecord
 end
