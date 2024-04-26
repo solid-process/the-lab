@@ -47,23 +47,23 @@ module Solid::Process::EventLogs
 
     def create_record!(event_logs, exception_data:)
       ::Rails.error.record do
-        serializad_event_logs = filter_and_serialize(event_logs)
-
-        record_attributes = serializad_event_logs.attributes
+        serialized_event_logs = filter_and_serialize(event_logs)
 
         if exception_data
-          record_attributes[:category] = "error"
-          record_attributes[:exception_class] = exception_data[:class]
-          record_attributes[:exception_message] = exception_data[:message]
-          record_attributes[:exception_backtrace] = exception_data[:backtrace]
+          serialized_event_logs[:category] = "error"
+          serialized_event_logs[:exception_class] = exception_data[:class]
+          serialized_event_logs[:exception_message] = exception_data[:message]
+          serialized_event_logs[:exception_backtrace] = exception_data[:backtrace]
         end
 
-        Record.create!(record_attributes)
+        Record.create!(serialized_event_logs)
       end
     end
 
     def filter_and_serialize(event_logs)
-      records = event_logs[:records].map do
+      serialized_attributes = Serialization::Model.serialize(event_logs).attributes
+
+      records = serialized_attributes[:records].map do
         result = _1[:result]
         result_value = parameter_filter.filter(result[:value].dup)
         result_filtered = result.merge(value: result_value)
@@ -75,9 +75,7 @@ module Solid::Process::EventLogs
         _1.merge(result: result_filtered, and_then: and_then_filtered || and_then)
       end
 
-      filtered_event_logs = event_logs.merge(records: records)
-
-      Serialization::Model.serialize(filtered_event_logs)
+      serialized_attributes.merge(records: records)
     end
   end
 end

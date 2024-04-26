@@ -16,9 +16,9 @@ module Solid::Process::EventLogs
     self.backtrace_cleaner = backtrace__cleaner
 
     def on_finish(event_logs:)
-      serialized_attributes = filter_and_serialize_attributes(event_logs)
+      serialized_event_logs = filter_and_serialize(event_logs)
 
-      json_data = {event_logs: serialized_attributes}
+      json_data = {event_logs: serialized_event_logs}
 
       logger.info(json_data.to_json)
     end
@@ -30,21 +30,19 @@ module Solid::Process::EventLogs
         backtrace: backtrace_cleaner.clean(exception.backtrace).join("; ")
       }
 
-      serialized_attributes = filter_and_serialize_attributes(event_logs)
+      serialized_event_logs = filter_and_serialize(event_logs)
 
-      json_data = {event_logs: serialized_attributes, exception: exception_data}
+      json_data = {event_logs: serialized_event_logs, exception: exception_data}
 
       logger.error(json_data.to_json)
     end
 
     private
 
-    def filter_and_serialize_attributes(event_logs)
-      filter_and_serialize(event_logs).attributes(main_records_only: true)
-    end
-
     def filter_and_serialize(event_logs)
-      records = event_logs[:records].map do
+      serialized_attributes = Serialization::Model.serialize(event_logs).attributes(main_records_only: true)
+
+      records = serialized_attributes[:records].map do
         result = _1[:result]
         result_value = parameter_filter.filter(result[:value].dup)
         result_filtered = result.merge(value: result_value)
@@ -56,9 +54,7 @@ module Solid::Process::EventLogs
         _1.merge(result: result_filtered, and_then: and_then_filtered || and_then)
       end
 
-      filtered_event_logs = event_logs.merge(records: records)
-
-      Serialization::Model.serialize(filtered_event_logs)
+      serialized_attributes.merge(records: records)
     end
   end
 end
