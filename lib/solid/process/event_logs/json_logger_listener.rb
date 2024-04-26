@@ -7,12 +7,20 @@ module Solid::Process::EventLogs
 
     config_accessor(:logger, :parameter_filter, :backtrace_cleaner)
 
+    rails_root = Rails.root.to_s
+    backtrace__cleaner = Solid::Process::BacktraceCleaner.new
+    backtrace__cleaner.add_filter { |line| line.sub("#{rails_root}/", "") }
+
     self.logger = Rails.logger
     self.parameter_filter = ActiveSupport::ParameterFilter.new(Rails.application.config.filter_parameters)
-    self.backtrace_cleaner = Solid::Process::BacktraceCleaner.new
+    self.backtrace_cleaner = backtrace__cleaner
 
     def on_finish(event_logs:)
-      logger.info(filter_and_serialize(event_logs).to_json)
+      serialized_attributes = filter_and_serialize_attributes(event_logs)
+
+      json_data = {event_logs: serialized_attributes}
+
+      logger.info(json_data.to_json)
     end
 
     def before_interruption(exception:, event_logs:)
@@ -22,23 +30,35 @@ module Solid::Process::EventLogs
         backtrace: backtrace_cleaner.clean(exception.backtrace).join("; ")
       }
 
-      logger.error(filter_and_serialize(event_logs).merge(exception: exception_data).to_json)
+      serialized_attributes = filter_and_serialize_attributes(event_logs)
+
+      json_data = {event_logs: serialized_attributes, exception: exception_data}
+
+      logger.error(json_data.to_json)
     end
 
     private
 
+    def filter_and_serialize_attributes(event_logs)
+      filter_and_serialize(event_logs).attributes(main_records_only: true)
+    end
+
     def filter_and_serialize(event_logs)
       records = event_logs[:records].map do
-        result_value = parameter_filter.filter(_1[:result][:value].dup)
+        result = _1[:result]
+        result_value = parameter_filter.filter(result[:value].dup)
+        result_filtered = result.merge(value: result_value)
 
-        _1.merge(result: _1[:result].merge(value: result_value))
+        and_then = _1[:and_then]
+        and_then_arg = parameter_filter.filter(and_then[:arg].dup) if and_then[:arg]
+        and_then_filtered = and_then.merge(arg: and_then_arg) if and_then[:arg]
+
+        _1.merge(result: result_filtered, and_then: and_then_filtered || and_then)
       end
 
       filtered_event_logs = event_logs.merge(records: records)
 
-      serialized_event_logs = Serialization::Model.serialize(filtered_event_logs).attributes(main_records_only: true)
-
-      {event_logs: serialized_event_logs}
+      Serialization::Model.serialize(filtered_event_logs)
     end
   end
 end
