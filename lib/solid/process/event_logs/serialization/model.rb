@@ -31,13 +31,18 @@ module Solid::Process::EventLogs::Serialization
     end
 
     def attributes(main_records_only: false)
+      records = records(main_only: main_records_only)
+
+      category = records[-1].dig(:result, :kind)
+
       {
         version: version,
         root_name: root_name,
         trace_id: trace_id,
         duration: duration,
         ids: ids,
-        records: records(main_only: main_records_only)
+        records: records,
+        category: category
       }
     end
 
