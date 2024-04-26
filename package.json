@@ -1,6 +1,5 @@
 {
   "name": "app",
-  "private": "true",
   "dependencies": {
     "@activeadmin/activeadmin": "4.0.0-beta5",
     "autoprefixer": "^10.4.19",
