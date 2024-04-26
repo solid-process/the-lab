@@ -1,7 +1,10 @@
 ::ActiveAdmin.register ::Solid::Process::EventLogs::Record do
   actions :index, :show, :destroy
 
-  permit_params :root_name, :trace_id, :version, :duration, :ids, :records
+  scope :all
+  scope :success, group: :status
+  scope :failure, group: :status
+  scope :error, group: :status
 
   filter :root_name
   filter :created_at
@@ -12,6 +15,13 @@
   index do
     selectable_column
     id_column
+    column :category do |record|
+      case record.category
+      when "error" then status_tag("Error", class: "error")
+      when "failure" then status_tag("Failure", class: "failure")
+      else status_tag("Success", class: "success")
+      end
+    end
     column :root_name
     column :created_at
     column :duration
@@ -22,10 +32,33 @@
   show do
     panel "Event Log" do
       attributes_table_for(resource) do
+        row :category do |record|
+          case record.category
+          when "error" then status_tag("Error", class: "error")
+          when "failure" then status_tag("Failure", class: "failure")
+          else status_tag("Success", class: "success")
+          end
+        end
         row :root_name
         row :created_at
         row :duration
         row :trace_id
+      end
+    end
+
+    if resource.error?
+      panel "Exception" do
+        attributes_table_for(resource) do
+          row "class" do |record|
+            record.exception_class
+          end
+          row "message" do |record|
+            record.exception_message
+          end
+          row "backtrace" do |record|
+            record.exception_backtrace.to_s.split(";").join("<br>").html_safe
+          end
+        end
       end
     end
 
