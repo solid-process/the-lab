@@ -44,15 +44,21 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_25_191520) do
   end
 
   create_table "solid_process_event_logs", force: :cascade do |t|
+    t.string "category"
     t.string "root_name", null: false
     t.string "trace_id"
     t.integer "version", null: false
     t.integer "duration", null: false
     t.json "ids", default: {}, null: false
     t.json "records", default: [], null: false
+    t.string "exception_class"
+    t.string "exception_message"
+    t.string "exception_backtrace"
     t.datetime "created_at", null: false
+    t.index ["category"], name: "index_solid_process_event_logs_on_category"
     t.index ["created_at"], name: "index_solid_process_event_logs_on_created_at"
     t.index ["duration"], name: "index_solid_process_event_logs_on_duration"
+    t.index ["exception_class"], name: "index_solid_process_event_logs_on_exception_class"
     t.index ["root_name"], name: "index_solid_process_event_logs_on_root_name"
     t.index ["trace_id"], name: "index_solid_process_event_logs_on_trace_id"
   end

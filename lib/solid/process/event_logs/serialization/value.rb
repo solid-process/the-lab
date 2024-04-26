@@ -7,6 +7,8 @@ module Solid::Process::EventLogs::Serialization
     require_relative "value/solid_model"
     require_relative "value/hash_object"
 
+    ERROR = "[ERROR]"
+
     extend self
 
     def serialize(value)
@@ -26,7 +28,7 @@ module Solid::Process::EventLogs::Serialization
         end
       end
     rescue
-      ERR_CODE
+      ERROR
     end
 
     def deserialize(value)

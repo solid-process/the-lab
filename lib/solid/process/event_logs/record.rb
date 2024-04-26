@@ -10,6 +10,8 @@ module Solid::Process::EventLogs
 
     self.table_name = "solid_process_event_logs"
 
+    enum category: {success: "success", failure: "failure", error: "error"}
+
     def raw_records
       self[:records]
     end

@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.status-tag.error {
+  background-color: #f56565;
+  color: #fff;
+}
+
+.status-tag.failure {
+  background-color: #f6ad55;
+  color: #111;
+}
+
+.status-tag.success {
+  background-color: #68d391;
+  color: #111;
+}
