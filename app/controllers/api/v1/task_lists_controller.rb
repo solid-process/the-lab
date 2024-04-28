@@ -5,7 +5,7 @@ module API::V1
     TASK_LIST_ATTRIBUTES = [:id, :name, :created_at, :updated_at].freeze
 
     def index
-      result = Account::Tasks::List::Listing.call(account: current_member)
+      result = Account::Task::List::Listing.call(account: current_member)
 
       data = result[:relation].pluck(*TASK_LIST_ATTRIBUTES).collect! { map_json_attributes(_1) }
 
@@ -13,7 +13,7 @@ module API::V1
     end
 
     def create
-      case Account::Tasks::List::Creation.call(account: current_member, **task_list_params)
+      case Account::Task::List::Creation.call(account: current_member, **task_list_params)
       in Solid::Success(task_list:)
         render_json_with_attributes(task_list, :created)
       in Solid::Failure(input:)
@@ -22,7 +22,7 @@ module API::V1
     end
 
     def update
-      case Account::Tasks::List::Updating.call(account: current_member, id: params[:id], **task_list_params)
+      case Account::Task::List::Updating.call(account: current_member, id: params[:id], **task_list_params)
       in Solid::Failure(input:) then render_json_with_model_errors(input)
       in Solid::Failure(:task_list_not_found, _) then render_task_list_not_found
       in Solid::Failure(:inbox_cannot_be_edited, _) then render_cannot_update_or_delete_inbox
@@ -32,7 +32,7 @@ module API::V1
     end
 
     def destroy
-      case Account::Tasks::List::Deletion.call(account: current_member, id: params[:id])
+      case Account::Task::List::Deletion.call(account: current_member, id: params[:id])
       in Solid::Failure(:inbox_cannot_be_edited, _) then render_cannot_update_or_delete_inbox
       in Solid::Failure(:task_list_not_found, _) then render_task_list_not_found
       in Solid::Success

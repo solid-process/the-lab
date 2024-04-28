@@ -30,7 +30,7 @@ module ActiveSupport
     end
 
     def create_task(user, name:, completed: false, task_list: user.inbox)
-      task = task_list.tasks.create!(name: "Foo")
+      task = task_list.task_items.create!(name: "Foo")
 
       completed ? complete_task(task) : task
     end
@@ -47,15 +47,15 @@ end
 
 class ActionDispatch::IntegrationTest
   def web_sign_in(user, password: "123123123")
-    post(web_users_sessions_url, params: {user: {email: user.email, password:}})
+    post(web_user_sessions_url, params: {user: {email: user.email, password:}})
 
-    assert_redirected_to web_tasks_url
+    assert_redirected_to web_task_items_url
 
     follow_redirect!
   end
 
   def assert_web_unauthorized_access
-    assert_redirected_to new_web_guests_session_path
+    assert_redirected_to new_web_guest_session_path
 
     follow_redirect!
 

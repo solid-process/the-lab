@@ -31,7 +31,7 @@ module API::V1
         task_list_id =
           case controller_name
           when "task_lists" then params[:id]
-          when "tasks", "incomplete", "complete" then params[:task_list_id]
+          when "task_items", "incomplete", "complete" then params[:task_list_id]
           end
 
         Account::Member.fetch_by(user_token: access_token, task_list_id:)

@@ -5,7 +5,7 @@
 
   <pre><%= current_user.token.access_token %></pre>
 
-  <%= button_to("Refresh", web_users_tokens_path, {
+  <%= button_to("Refresh", web_user_tokens_path, {
     method: :put,
     data: {confirm: 'Are you sure to generate a new API token?'}
   }) %>

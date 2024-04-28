@@ -2,11 +2,11 @@
 
 require "test_helper"
 
-class API::V1::Users::RegistrationsTest < ActionDispatch::IntegrationTest
+class API::V1::User::RegistrationsTest < ActionDispatch::IntegrationTest
   test "#create responds with 400 when params are missing" do
     params = [{}, {user: {}}, {user: nil}].sample
 
-    post(api_v1_users_registrations_url, params:)
+    post(api_v1_user_registrations_url, params:)
 
     assert_api_v1_response_with_error(:bad_request)
   end
@@ -22,7 +22,7 @@ class API::V1::Users::RegistrationsTest < ActionDispatch::IntegrationTest
       }
     }
 
-    post(api_v1_users_registrations_url, params:)
+    post(api_v1_user_registrations_url, params:)
 
     assert_api_v1_response_with_error(:unprocessable_entity)
   end
@@ -33,7 +33,7 @@ class API::V1::Users::RegistrationsTest < ActionDispatch::IntegrationTest
 
     params = {user: {email: "email@example.com", password:, password_confirmation:}}
 
-    post(api_v1_users_registrations_url, params:)
+    post(api_v1_user_registrations_url, params:)
 
     assert_api_v1_response_with_error(:unprocessable_entity)
   end
@@ -44,7 +44,7 @@ class API::V1::Users::RegistrationsTest < ActionDispatch::IntegrationTest
 
     params = {user: {email: "email@example.com", password:, password_confirmation:}}
 
-    post(api_v1_users_registrations_url, params:)
+    post(api_v1_user_registrations_url, params:)
 
     assert_api_v1_response_with_error(:unprocessable_entity)
   end
@@ -65,7 +65,7 @@ class API::V1::Users::RegistrationsTest < ActionDispatch::IntegrationTest
       -> { TaskList.count } => 1,
       -> { UserToken.count } => 1
     ) do
-      post(api_v1_users_registrations_url, params:)
+      post(api_v1_user_registrations_url, params:)
     end
 
     json_data = assert_api_v1_response_with_success(:created)
@@ -79,7 +79,7 @@ class API::V1::Users::RegistrationsTest < ActionDispatch::IntegrationTest
   test "#destroy responds with 401 when access token is invalid" do
     headers = [{}, api_v1_authorization_header(SecureRandom.hex(20))].sample
 
-    delete(api_v1_users_registrations_url, headers:)
+    delete(api_v1_user_registrations_url, headers:)
 
     assert_api_v1_response_with_error(:unauthorized)
   end
@@ -94,7 +94,7 @@ class API::V1::Users::RegistrationsTest < ActionDispatch::IntegrationTest
       -> { TaskList.count } => -1,
       -> { UserToken.count } => -1
     ) do
-      delete(api_v1_users_registrations_url, headers: api_v1_authorization_header(user))
+      delete(api_v1_user_registrations_url, headers: api_v1_authorization_header(user))
     end
 
     assert_api_v1_response_with_success(:ok)

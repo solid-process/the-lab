@@ -2,11 +2,11 @@
 
 require "test_helper"
 
-class API::V1::Users::PasswordsTest < ActionDispatch::IntegrationTest
+class API::V1::User::PasswordsTest < ActionDispatch::IntegrationTest
   test "#update responds with 401 when access token is invalid" do
     headers = [{}, api_v1_authorization_header(SecureRandom.hex(20))].sample
 
-    put(api_v1_users_passwords_url, params: {}, headers:)
+    put(api_v1_user_passwords_url, params: {}, headers:)
 
     assert_api_v1_response_with_error(:unauthorized)
   end
@@ -16,7 +16,7 @@ class API::V1::Users::PasswordsTest < ActionDispatch::IntegrationTest
 
     params = [{}, {user: {}}, {user: nil}].sample
 
-    put(api_v1_users_passwords_url, params:, headers: api_v1_authorization_header(user))
+    put(api_v1_user_passwords_url, params:, headers: api_v1_authorization_header(user))
 
     assert_api_v1_response_with_error(:bad_request)
   end
@@ -30,7 +30,7 @@ class API::V1::Users::PasswordsTest < ActionDispatch::IntegrationTest
 
     params = {user: {current_password:, password:, password_confirmation:}}
 
-    put(api_v1_users_passwords_url, params:, headers: api_v1_authorization_header(user))
+    put(api_v1_user_passwords_url, params:, headers: api_v1_authorization_header(user))
 
     assert_api_v1_response_with_error(:unprocessable_entity)
   end
@@ -44,7 +44,7 @@ class API::V1::Users::PasswordsTest < ActionDispatch::IntegrationTest
 
     params = {user: {current_password:, password:, password_confirmation:}}
 
-    put(api_v1_users_passwords_url, params:, headers: api_v1_authorization_header(user))
+    put(api_v1_user_passwords_url, params:, headers: api_v1_authorization_header(user))
 
     assert_api_v1_response_with_success(:ok)
   end
