@@ -13,13 +13,13 @@ class Account::Tasks::Item::Listing < Solid::Process
 
     return Failure(:task_list_not_found) unless member.authorized?
 
-    tasks = Task.where(task_list_id: member.task_list_id)
+    tasks = TaskItem.where(task_list_id: member.task_list_id)
 
     tasks =
       case filter
       when "completed" then tasks.completed.order(completed_at: :desc)
       when "incomplete" then tasks.incomplete.order(created_at: :desc)
-      else tasks.order(Arel.sql("tasks.completed_at DESC NULLS FIRST, tasks.created_at DESC"))
+      else tasks.order(Arel.sql("task_items.completed_at DESC NULLS FIRST, task_items.created_at DESC"))
       end
 
     Success(:tasks_found, tasks:)

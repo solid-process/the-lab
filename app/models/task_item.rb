@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Task < ApplicationRecord
+class TaskItem < ApplicationRecord
   belongs_to :task_list
 
   scope :completed, -> { where.not(completed_at: nil) }

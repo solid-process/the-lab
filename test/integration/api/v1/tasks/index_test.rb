@@ -30,7 +30,7 @@ class API::V1::TasksIndexTest < ActionDispatch::IntegrationTest
   test "#index responds with 200" do
     user = users(:one)
 
-    task1 = user.inbox.tasks.first
+    task1 = user.inbox.task_items.first
     task2 = create_task(user, name: "Foo")
     task2.update_column(:completed_at, Time.current)
 
@@ -63,7 +63,7 @@ class API::V1::TasksIndexTest < ActionDispatch::IntegrationTest
   test "#index responds with 200 when filtering by incomplete" do
     user = users(:one)
 
-    task1 = user.inbox.tasks.first
+    task1 = user.inbox.task_items.first
     task2 = create_task(user, name: "Foo")
     task2.update_column(:completed_at, Time.current)
 

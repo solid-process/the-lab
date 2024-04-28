@@ -4,20 +4,20 @@ require "test_helper"
 
 class WebTaskItemsEditingTest < ActionDispatch::IntegrationTest
   test "guest tries to access new task form" do
-    get(edit_web_task_url(tasks(:one)))
+    get(edit_web_task_url(task_items(:one)))
 
     assert_web_unauthorized_access
   end
 
   test "guest tries to create a task" do
-    put(web_task_url(tasks(:one)), params: {task: {name: "Foo"}})
+    put(web_task_url(task_items(:one)), params: {task: {name: "Foo"}})
 
     assert_web_unauthorized_access
   end
 
   test "user tries to update a task from another user" do
     user = users(:one)
-    task = tasks(:two)
+    task = task_items(:two)
 
     web_sign_in(user)
 
@@ -28,7 +28,7 @@ class WebTaskItemsEditingTest < ActionDispatch::IntegrationTest
 
   test "user updates a task with valid data" do
     user = users(:one)
-    task = tasks(:one)
+    task = task_items(:one)
 
     web_sign_in(user)
 
@@ -42,7 +42,7 @@ class WebTaskItemsEditingTest < ActionDispatch::IntegrationTest
 
     assert_select("input[type=\"checkbox\"]:not(checked)")
 
-    put(web_task_url(tasks(:one)), params: {task: {name: "Bar", completed: true}})
+    put(web_task_url(task_items(:one)), params: {task: {name: "Bar", completed: true}})
 
     assert_redirected_to web_tasks_url
 
@@ -61,7 +61,7 @@ class WebTaskItemsEditingTest < ActionDispatch::IntegrationTest
 
   test "user updates a task with invalid data" do
     user = users(:one)
-    task = tasks(:one)
+    task = task_items(:one)
 
     web_sign_in(user)
 

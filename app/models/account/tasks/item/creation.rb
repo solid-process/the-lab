@@ -18,7 +18,7 @@ class Account::Tasks::Item::Creation < Solid::Process
 
     return Failure(:task_list_not_found) unless member.authorized?
 
-    task = Task.create!(name:, task_list_id: member.task_list_id)
+    task = TaskItem.create!(name:, task_list_id: member.task_list_id)
 
     Success(:task_created, task:)
   end

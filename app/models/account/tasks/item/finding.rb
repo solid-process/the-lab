@@ -14,7 +14,7 @@ class Account::Tasks::Item::Finding < Solid::Process
 
     return Failure(:task_list_not_found) unless member.authorized?
 
-    task = Task.find_by(id:, task_list_id: member.task_list_id)
+    task = TaskItem.find_by(id:, task_list_id: member.task_list_id)
 
     return Failure(:task_not_found) unless task
 

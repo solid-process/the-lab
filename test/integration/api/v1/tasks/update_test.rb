@@ -5,7 +5,7 @@ require "test_helper"
 class API::V1::TasksUpdateTest < ActionDispatch::IntegrationTest
   test "#update responds with 401 when access token is invalid" do
     user = users(:one)
-    task = tasks(:one)
+    task = task_items(:one)
     params = {task: {name: "Foo"}}
     headers = [{}, api_v1_authorization_header(SecureRandom.hex(20))].sample
 
@@ -16,7 +16,7 @@ class API::V1::TasksUpdateTest < ActionDispatch::IntegrationTest
 
   test "#update responds with 400 when params are missing" do
     user = users(:one)
-    task = tasks(:one)
+    task = task_items(:one)
     params = [{}, {task: {}}, {task: nil}].sample
 
     put(api_v1_task_list_task_url(user.inbox, task), params:, headers: api_v1_authorization_header(user))
@@ -26,7 +26,7 @@ class API::V1::TasksUpdateTest < ActionDispatch::IntegrationTest
 
   test "#update responds with 404 when task list is not found" do
     user = users(:one)
-    task = tasks(:one)
+    task = task_items(:one)
     params = {task: {name: "Foo"}}
 
     url = api_v1_task_list_task_url(task_list_id: TaskList.maximum(:id) + 1, id: task.id)
@@ -40,7 +40,7 @@ class API::V1::TasksUpdateTest < ActionDispatch::IntegrationTest
     user = users(:one)
     params = {task: {name: "Foo"}}
 
-    url = api_v1_task_list_task_url(task_list_id: user.inbox, id: Task.maximum(:id) + 1)
+    url = api_v1_task_list_task_url(task_list_id: user.inbox, id: TaskItem.maximum(:id) + 1)
 
     put(url, params:, headers: api_v1_authorization_header(user))
 
@@ -49,7 +49,7 @@ class API::V1::TasksUpdateTest < ActionDispatch::IntegrationTest
 
   test "#update responds with 404 when task list belongs to another user" do
     user = users(:one)
-    task = tasks(:two)
+    task = task_items(:two)
     params = {task: {name: "Foo"}}
 
     put(api_v1_task_list_task_url(task.task_list, task), params:, headers: api_v1_authorization_header(user))
@@ -59,7 +59,7 @@ class API::V1::TasksUpdateTest < ActionDispatch::IntegrationTest
 
   test "#update responds with 422 when name is invalid" do
     user = users(:one)
-    task = tasks(:one)
+    task = task_items(:one)
     params = {task: {name: [nil, ""].sample}}
 
     put(api_v1_task_list_task_url(user.inbox, task), params:, headers: api_v1_authorization_header(user))
@@ -69,35 +69,35 @@ class API::V1::TasksUpdateTest < ActionDispatch::IntegrationTest
 
   test "#update responds with 200 when task is updated" do
     user = users(:one)
-    task = tasks(:one)
+    task = task_items(:one)
     params = {task: {name: SecureRandom.hex}}
 
     put(api_v1_task_list_task_url(user.inbox, task), params:, headers: api_v1_authorization_header(user))
 
     json_data = assert_api_v1_response_with_success(:ok)
 
-    updated_task = user.tasks.find(json_data["id"])
+    updated_task = user.task_items.find(json_data["id"])
 
     assert_equal params[:task][:name], updated_task.name
   end
 
   test "#update responds with 200 when marking task as completed" do
     user = users(:one)
-    task = tasks(:one)
+    task = task_items(:one)
     params = {task: {completed: [true, 1, "1", "true"].sample}}
 
     put(api_v1_task_list_task_url(user.inbox, task), params:, headers: api_v1_authorization_header(user))
 
     json_data = assert_api_v1_response_with_success(:ok)
 
-    updated_task = user.tasks.find(json_data["id"])
+    updated_task = user.task_items.find(json_data["id"])
 
     assert updated_task.completed_at.present?
   end
 
   test "#update responds with 200 when marking task as incomplete" do
     user = users(:one)
-    task = tasks(:one).then { complete_task(_1) }
+    task = task_items(:one).then { complete_task(_1) }
 
     params = {task: {completed: [false, 0, "0", "false"].sample}}
 
@@ -105,7 +105,7 @@ class API::V1::TasksUpdateTest < ActionDispatch::IntegrationTest
 
     json_data = assert_api_v1_response_with_success(:ok)
 
-    updated_task = user.tasks.find(json_data["id"])
+    updated_task = user.task_items.find(json_data["id"])
 
     assert updated_task.completed_at.blank?
   end

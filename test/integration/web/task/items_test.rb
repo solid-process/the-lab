@@ -59,7 +59,7 @@ class WebTaskItemsTest < ActionDispatch::IntegrationTest
   test "user access completed tasks" do
     user = users(:one)
 
-    tasks(:one).then { complete_task(_1) }
+    task_items(:one).then { complete_task(_1) }
 
     web_sign_in(user)
 
