@@ -15,7 +15,7 @@ Rails.application.routes.draw do
       resources :registrations, only: [:new]
     end
 
-    namespace :users do
+    namespace :user do
       resource :sessions, only: [:destroy, :create]
 
       resource :passwords, only: [:update]

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Web::Users
+module Web::User
   class RegistrationsController < BaseController
     layout "web/guest"
 

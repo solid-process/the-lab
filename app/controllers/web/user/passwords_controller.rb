@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-module Web::Users
+module Web::User
   class PasswordsController < BaseController
     def update
       case User::Password::Updating.call(user: current_user, **password_params)
       in Solid::Success
-        redirect_to web_users_settings_profile_path, notice: "Your password has been updated."
+        redirect_to web_user_settings_profile_path, notice: "Your password has been updated."
       in Solid::Failure(input:)
         render("web/user/settings/profile", status: :unprocessable_entity, locals: {input:})
       end

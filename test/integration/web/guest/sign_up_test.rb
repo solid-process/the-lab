@@ -12,7 +12,7 @@ class WebGuestSignUpTest < ActionDispatch::IntegrationTest
 
     params = {guest: {email: "foo@", password: "123", password_confirmation: "321"}}
 
-    post(web_users_registrations_url, params:)
+    post(web_user_registrations_url, params:)
 
     assert_response :unprocessable_entity
 
@@ -32,7 +32,7 @@ class WebGuestSignUpTest < ActionDispatch::IntegrationTest
       }
     }
 
-    post(web_users_registrations_url, params:)
+    post(web_user_registrations_url, params:)
 
     assert_response :unprocessable_entity
 
@@ -57,7 +57,7 @@ class WebGuestSignUpTest < ActionDispatch::IntegrationTest
       -> { TaskList.count } => 1,
       -> { UserToken.count } => 1
     ) do
-      post(web_users_registrations_url, params:)
+      post(web_user_registrations_url, params:)
     end
 
     assert_redirected_to web_tasks_url

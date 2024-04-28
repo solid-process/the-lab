@@ -47,7 +47,7 @@ end
 
 class ActionDispatch::IntegrationTest
   def web_sign_in(user, password: "123123123")
-    post(web_users_sessions_url, params: {user: {email: user.email, password:}})
+    post(web_user_sessions_url, params: {user: {email: user.email, password:}})
 
     assert_redirected_to web_tasks_url
 
