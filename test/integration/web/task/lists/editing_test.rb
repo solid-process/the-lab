@@ -53,7 +53,7 @@ class WebTaskListsEditingTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
 
-    assert_select("h2", "Edit task list ##{task_list.id}")
+    assert_select("h2", "Edit list ##{task_list.id}")
 
     assert_select("textarea", task_list.name)
 
@@ -74,7 +74,7 @@ class WebTaskListsEditingTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
 
-    assert_select("h2", "Edit task list ##{task_list.id}")
+    assert_select("h2", "Edit list ##{task_list.id}")
 
     assert_select("textarea", task_list.name)
 

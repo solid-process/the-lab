@@ -24,7 +24,7 @@ class WebTaskItemsCreationTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
 
-    assert_select("h2", "New task")
+    assert_select("h2", "New item")
 
     assert_difference(-> { user.inbox.task_items.count }) do
       post(web_task_items_url, params: {task: {name: "Bar"}})

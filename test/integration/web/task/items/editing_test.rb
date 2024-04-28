@@ -36,7 +36,7 @@ class WebTaskItemsEditingTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
 
-    assert_select("h2", "Edit task ##{task.id}")
+    assert_select("h2", "Edit item ##{task.id}")
 
     assert_select("textarea", task.name)
 

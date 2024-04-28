@@ -20,7 +20,7 @@ class WebTaskListsTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
 
-    assert_select("td", "Inbox 📌")
+    assert_select("td", "Inbox 📌(This is your current list)")
     assert_select("td", "Foo")
   end
 

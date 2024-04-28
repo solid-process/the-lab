@@ -1,6 +1,6 @@
 <%= render("web/task/shared/header", current_page: "lists", title: "Lists") %>
 
-<% current_task_list_icon = -> { "<mark>📌</mark>".html_safe if current_task_list?(_1) } %>
+<% current_task_list_icon = -> { "<mark>📌</mark><br/><small>(This is your current list)</small>".html_safe if current_task_list?(_1) } %>
 
 <main>
   <table>

@@ -1,5 +1,6 @@
 <%=
-  path = controller_name == "lists" ? new_web_task_list_path : new_web_task_item_path(back_to:)
+  resource_name, path =
+    controller_name == "lists" ? ["list", new_web_task_list_path] : ["item", new_web_task_item_path(back_to:)]
 
-  link_to("+ New", path, class: is_current_page["new"] )
+  link_to(" + New #{resource_name}", path, class: is_current_page["new"] )
 %>

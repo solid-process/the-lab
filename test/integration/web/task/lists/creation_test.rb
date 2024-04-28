@@ -24,7 +24,7 @@ class WebTaskListsCreationTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
 
-    assert_select("h2", "New task list")
+    assert_select("h2", "New list")
 
     assert_no_difference(-> { user.account.task_lists.count }) do
       post(web_task_lists_url, params: {task_list: {name: ""}})

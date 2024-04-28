@@ -1,7 +1,7 @@
 <%= render("web/task/shared/header", current_page: "tasks") %>
 
 <main>
-  <h2>Edit task #<%= task.id %></h2>
+  <h2>Edit item #<%= task.id %></h2>
 
   <%= render("form", task:, url: web_task_item_path(id: task.id, back_to: params[:back_to]), method: :put) %>
 </main>

@@ -34,7 +34,7 @@ class WebTaskListsSelectionTest < ActionDispatch::IntegrationTest
 
     assert_equal task_list.id, session[:task_list_id]
 
-    assert_select("td", "Foo 📌")
+    assert_select("td", "Foo 📌(This is your current list)")
     assert_select("td", "Inbox")
   end
 
