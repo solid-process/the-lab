@@ -3,7 +3,7 @@
 module Web::Tasks
   class Items::CompletedController < BaseController
     def index
-      case Account::Tasks::Item::Listing.call(filter: "completed", member: current_member)
+      case Account::Task::Item::Listing.call(filter: "completed", member: current_member)
       in Solid::Success(tasks:)
         render("web/tasks/filter/completed", locals: {tasks:})
       end

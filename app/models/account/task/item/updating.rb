@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Account::Tasks::Item::Updating < Solid::Process
+class Account::Task::Item::Updating < Solid::Process
   UNDEFINED = Object.new
 
   input do
@@ -27,7 +27,7 @@ class Account::Tasks::Item::Updating < Solid::Process
   private
 
   def find_task(id:, member:, **)
-    case Account::Tasks::Item::Finding.call(id:, member:)
+    case Account::Task::Item::Finding.call(id:, member:)
     in Solid::Success(task:) then Continue(task:)
     in Solid::Failure(type, value) then Failure(type, **value)
     end

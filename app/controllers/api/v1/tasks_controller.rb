@@ -5,7 +5,7 @@ module API::V1
     include Tasks::Concerns::Rendering
 
     def index
-      case Account::Tasks::Item::Listing.call(
+      case Account::Task::Item::Listing.call(
         member: current_member,
         filter: params[:filter]
       )
@@ -23,7 +23,7 @@ module API::V1
 
       create_input = {member: current_member, **create_params}
 
-      case Account::Tasks::Item::Creation.call(create_input)
+      case Account::Task::Item::Creation.call(create_input)
       in Solid::Failure(:task_list_not_found | :task_not_found, _)
         render_task_or_list_not_found
       in Solid::Failure(input:)
@@ -38,7 +38,7 @@ module API::V1
 
       update_input = {member: current_member, id: params[:id], **update_params}
 
-      case Account::Tasks::Item::Updating.call(update_input)
+      case Account::Task::Item::Updating.call(update_input)
       in Solid::Failure(:task_list_not_found | :task_not_found, _)
         render_task_or_list_not_found
       in Solid::Failure(input:)
@@ -49,7 +49,7 @@ module API::V1
     end
 
     def destroy
-      case Account::Tasks::Item::Deletion.call(member: current_member, id: params[:id])
+      case Account::Task::Item::Deletion.call(member: current_member, id: params[:id])
       in Solid::Failure(:task_list_not_found | :task_not_found, _)
         render_task_or_list_not_found
       in Solid::Success

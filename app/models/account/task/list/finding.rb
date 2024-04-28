@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Account::Tasks::List::Finding < Solid::Process
+class Account::Task::List::Finding < Solid::Process
   input do
     attribute :id, :integer
     attribute :account

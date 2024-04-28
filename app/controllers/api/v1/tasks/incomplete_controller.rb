@@ -5,7 +5,7 @@ module API::V1
     include Tasks::Concerns::Rendering
 
     def update
-      case Account::Tasks::Item::Incomplete.call(member: current_member, id: params[:id])
+      case Account::Task::Item::Incomplete.call(member: current_member, id: params[:id])
       in Solid::Failure(:task_list_not_found | :task_not_found, _)
         render_task_or_list_not_found
       in Solid::Success(task:)

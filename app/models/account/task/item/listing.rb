@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Account::Tasks::Item::Listing < Solid::Process
+class Account::Task::Item::Listing < Solid::Process
   input do
     attribute :member
     attribute :filter, default: "all"

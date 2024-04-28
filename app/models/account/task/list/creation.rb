@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Account::Tasks::List::Creation < Solid::Process
+class Account::Task::List::Creation < Solid::Process
   input do
     attribute :name, :string
     attribute :inbox, :boolean, default: false

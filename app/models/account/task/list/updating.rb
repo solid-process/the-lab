@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Account::Tasks::List::Updating < Solid::Process
+class Account::Task::List::Updating < Solid::Process
   input do
     attribute :id, :integer
     attribute :name, :string
@@ -18,7 +18,7 @@ class Account::Tasks::List::Updating < Solid::Process
   def call(attributes)
     attributes => {id:, account:, name:}
 
-    case Account::Tasks::List::Finding.call(account:, id:)
+    case Account::Task::List::Finding.call(account:, id:)
     in Solid::Failure(type, value) then Failure(type, **value)
     in Solid::Success(task_list:)
       task_list.update!(name:)

@@ -4,7 +4,7 @@ class User::Registration < Solid::Process
   deps do
     attribute :mailer, default: UserMailer
     attribute :token_creation, default: User::AccessToken::Creation
-    attribute :task_list_creation, default: Account::Tasks::List::Creation
+    attribute :task_list_creation, default: Account::Task::List::Creation
   end
 
   input do
