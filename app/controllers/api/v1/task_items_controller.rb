@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module API::V1
-  class TasksController < BaseController
-    include Tasks::Concerns::Rendering
+  class TaskItemsController < BaseController
+    include TaskItems::Concerns::Rendering
 
     def index
       case Account::Task::Item::Listing.call(

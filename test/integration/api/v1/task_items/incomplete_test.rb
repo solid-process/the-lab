@@ -2,13 +2,13 @@
 
 require "test_helper"
 
-class API::V1::TasksIncompleteTest < ActionDispatch::IntegrationTest
+class API::V1::TaskItemsIncompleteTest < ActionDispatch::IntegrationTest
   test "#update responds with 401 when access token is invalid" do
     user = users(:one)
     task = task_items(:one)
     headers = [{}, api_v1_authorization_header(SecureRandom.hex(20))].sample
 
-    put(incomplete_api_v1_task_list_task_url(user.inbox, task), headers:)
+    put(incomplete_api_v1_task_list_item_url(user.inbox, task), headers:)
 
     assert_api_v1_response_with_error(:unauthorized)
   end
@@ -17,7 +17,7 @@ class API::V1::TasksIncompleteTest < ActionDispatch::IntegrationTest
     user = users(:one)
     task = task_items(:one)
 
-    url = incomplete_api_v1_task_list_task_url(task_list_id: TaskList.maximum(:id) + 1, id: task.id)
+    url = incomplete_api_v1_task_list_item_url(task_list_id: TaskList.maximum(:id) + 1, id: task.id)
 
     put(url, headers: api_v1_authorization_header(user))
 
@@ -27,7 +27,7 @@ class API::V1::TasksIncompleteTest < ActionDispatch::IntegrationTest
   test "#update responds with 404 when task is not found" do
     user = users(:one)
 
-    url = incomplete_api_v1_task_list_task_url(task_list_id: user.inbox, id: TaskItem.maximum(:id) + 1)
+    url = incomplete_api_v1_task_list_item_url(task_list_id: user.inbox, id: TaskItem.maximum(:id) + 1)
 
     put(url, headers: api_v1_authorization_header(user))
 
@@ -38,7 +38,7 @@ class API::V1::TasksIncompleteTest < ActionDispatch::IntegrationTest
     user = users(:one)
     task = task_items(:two)
 
-    put(incomplete_api_v1_task_list_task_url(task.task_list, task), headers: api_v1_authorization_header(user))
+    put(incomplete_api_v1_task_list_item_url(task.task_list, task), headers: api_v1_authorization_header(user))
 
     assert_api_v1_response_with_error(:not_found)
   end
@@ -48,7 +48,7 @@ class API::V1::TasksIncompleteTest < ActionDispatch::IntegrationTest
     task = task_items(:one).then { complete_task(_1) }
 
     assert_changes -> { task.reload.completed_at } do
-      put(incomplete_api_v1_task_list_task_url(user.inbox, task), headers: api_v1_authorization_header(user))
+      put(incomplete_api_v1_task_list_item_url(user.inbox, task), headers: api_v1_authorization_header(user))
     end
 
     assert_nil(task.completed_at)

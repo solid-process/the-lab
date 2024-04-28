@@ -2,11 +2,11 @@
 
 require "test_helper"
 
-class API::V1::TasksIndexTest < ActionDispatch::IntegrationTest
+class API::V1::TaskItemsIndexTest < ActionDispatch::IntegrationTest
   test "#index responds with 401 when access token is invalid" do
     headers = [{}, api_v1_authorization_header(SecureRandom.hex(20))].sample
 
-    get(api_v1_task_list_tasks_url(TaskList.inbox.first), headers:)
+    get(api_v1_task_list_items_url(TaskList.inbox.first), headers:)
 
     assert_api_v1_response_with_error(:unauthorized)
   end
@@ -14,7 +14,7 @@ class API::V1::TasksIndexTest < ActionDispatch::IntegrationTest
   test "#index responds with 404 when task list is not found" do
     user = users(:one)
 
-    get(api_v1_task_list_tasks_url(user.task_lists.maximum(:id) + 1), headers: api_v1_authorization_header(user))
+    get(api_v1_task_list_items_url(user.task_lists.maximum(:id) + 1), headers: api_v1_authorization_header(user))
 
     assert_api_v1_response_with_error(:not_found)
   end
@@ -22,7 +22,7 @@ class API::V1::TasksIndexTest < ActionDispatch::IntegrationTest
   test "#index responds with 404 when task list belongs to another user" do
     user = users(:one)
 
-    get(api_v1_task_list_tasks_url(users(:two).task_lists.first), headers: api_v1_authorization_header(user))
+    get(api_v1_task_list_items_url(users(:two).task_lists.first), headers: api_v1_authorization_header(user))
 
     assert_api_v1_response_with_error(:not_found)
   end
@@ -34,7 +34,7 @@ class API::V1::TasksIndexTest < ActionDispatch::IntegrationTest
     task2 = create_task(user, name: "Foo")
     task2.update_column(:completed_at, Time.current)
 
-    get(api_v1_task_list_tasks_url(user.inbox), headers: api_v1_authorization_header(user))
+    get(api_v1_task_list_items_url(user.inbox), headers: api_v1_authorization_header(user))
 
     collection = assert_api_v1_response_with_success(:ok)
 
@@ -51,7 +51,7 @@ class API::V1::TasksIndexTest < ActionDispatch::IntegrationTest
 
     task = create_task(user, name: "Foo", completed: true)
 
-    get(api_v1_task_list_tasks_url(user.inbox, filter: "completed"), headers: api_v1_authorization_header(user))
+    get(api_v1_task_list_items_url(user.inbox, filter: "completed"), headers: api_v1_authorization_header(user))
 
     collection = assert_api_v1_response_with_success(:ok)
 
@@ -67,7 +67,7 @@ class API::V1::TasksIndexTest < ActionDispatch::IntegrationTest
     task2 = create_task(user, name: "Foo")
     task2.update_column(:completed_at, Time.current)
 
-    get(api_v1_task_list_tasks_url(user.inbox, filter: "incomplete"), headers: api_v1_authorization_header(user))
+    get(api_v1_task_list_items_url(user.inbox, filter: "incomplete"), headers: api_v1_authorization_header(user))
 
     collection = assert_api_v1_response_with_success(:ok)
 

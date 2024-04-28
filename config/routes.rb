@@ -67,10 +67,10 @@ Rails.application.routes.draw do
       end
 
       resources :task_lists, only: [:index, :create, :update, :destroy] do
-        resources :tasks, only: [:index, :create, :update, :destroy] do
+        resources :task_items, path: "items", as: "items", only: [:index, :create, :update, :destroy] do
           member do
-            put :complete, to: "tasks/complete#update"
-            put :incomplete, to: "tasks/incomplete#update"
+            put :complete, to: "task_items/complete#update"
+            put :incomplete, to: "task_items/incomplete#update"
           end
         end
       end
