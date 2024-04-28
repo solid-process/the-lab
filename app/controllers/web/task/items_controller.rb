@@ -5,7 +5,7 @@ module Web::Task
     def index
       case Account::Task::Item::Listing.call(filter: "all", member: current_member)
       in Solid::Success(tasks:)
-        render("web/task/filter/all", locals: {tasks:})
+        render("web/task/items", locals: {tasks:, scope: "all"})
       end
     end
 

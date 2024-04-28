@@ -8,11 +8,13 @@
   set_current = -> { _1.merge!(title: "#{_1[:title]} (#{tasks.size})", style: "") }
 
   case scope
-  when "incomplete" then set_current[incomplete_tasks]
-  when "completed" then set_current[completed_tasks]
   when "all" then set_current[all_tasks]
+  when "completed" then set_current[completed_tasks]
+  when "incomplete" then set_current[incomplete_tasks]
   end
 %>
+
+<%= render("web/task/shared/header", current_page: "tasks", back_to: scope) %>
 
 <main>
   <% if current_task_list.task_items.exists? %>
