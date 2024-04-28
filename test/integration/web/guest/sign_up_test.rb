@@ -60,7 +60,7 @@ class WebGuestSignUpTest < ActionDispatch::IntegrationTest
       post(web_user_registrations_url, params:)
     end
 
-    assert_redirected_to web_tasks_url
+    assert_redirected_to web_task_items_url
 
     follow_redirect!
 

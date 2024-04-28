@@ -11,7 +11,7 @@ module Web::User
       in Solid::Success(user:)
         sign_in(user)
 
-        redirect_to web_tasks_path, notice: "You have successfully registered!"
+        redirect_to web_task_items_path, notice: "You have successfully registered!"
       in Solid::Failure(input:)
         render("web/guest/registrations/new", locals: {user: input}, status: :unprocessable_entity)
       end

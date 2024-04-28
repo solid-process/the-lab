@@ -26,7 +26,7 @@ class WebGuestSignInTest < ActionDispatch::IntegrationTest
 
     post(web_user_sessions_url, params:)
 
-    assert_redirected_to web_tasks_url
+    assert_redirected_to web_task_items_url
 
     follow_redirect!
 

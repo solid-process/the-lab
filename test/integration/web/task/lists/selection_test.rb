@@ -8,7 +8,7 @@ class WebTaskListsSelectionTest < ActionDispatch::IntegrationTest
 
     task_list = create_task_list(user.account, name: "Foo")
 
-    put(select_web_tasks_list_url(task_list))
+    put(select_web_task_list_url(task_list))
 
     assert_web_unauthorized_access
   end
@@ -21,10 +21,10 @@ class WebTaskListsSelectionTest < ActionDispatch::IntegrationTest
     web_sign_in(user)
 
     assert_changes -> { session[:task_list_id] } do
-      put(select_web_tasks_list_url(task_list))
+      put(select_web_task_list_url(task_list))
     end
 
-    assert_redirected_to web_tasks_lists_url
+    assert_redirected_to web_task_lists_url
 
     follow_redirect!
 
@@ -44,7 +44,7 @@ class WebTaskListsSelectionTest < ActionDispatch::IntegrationTest
 
     web_sign_in(user)
 
-    put(select_web_tasks_list_url(task_list))
+    put(select_web_task_list_url(task_list))
 
     assert_response :not_found
   end

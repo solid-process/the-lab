@@ -11,7 +11,7 @@ module Web::User
       in Solid::Success(user:)
         sign_in(user)
 
-        redirect_to web_tasks_path, notice: "You have successfully signed in!"
+        redirect_to web_task_items_path, notice: "You have successfully signed in!"
       in Solid::Failure(input:)
         flash.now[:alert] = "Invalid email or password. Please try again."
 

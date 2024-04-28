@@ -32,19 +32,19 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :tasks, except: [:show], module: "tasks", controller: "items" do
-      member do
-        put :complete, to: "items/complete#update"
-        put :incomplete, to: "items/incomplete#update"
+    namespace :task do
+      resources :items, except: [:show] do
+        member do
+          put :complete, to: "items/complete#update"
+          put :incomplete, to: "items/incomplete#update"
+        end
+
+        collection do
+          get :completed, to: "items/completed#index"
+          get :incomplete, to: "items/incomplete#index"
+        end
       end
 
-      collection do
-        get :completed, to: "items/completed#index"
-        get :incomplete, to: "items/incomplete#index"
-      end
-    end
-
-    namespace :tasks do
       resources :lists, except: [:show] do
         member do
           put :select, to: "lists/select#update"
