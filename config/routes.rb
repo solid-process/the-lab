@@ -55,7 +55,7 @@ Rails.application.routes.draw do
 
   namespace :api, constraints: {format: "json"} do
     namespace :v1 do
-      namespace :users do
+      namespace :user do
         resource :tokens, only: [:update]
         resource :sessions, only: [:create]
         resource :registrations, only: [:create, :destroy]

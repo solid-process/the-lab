@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 module API::V1
-  class Users::PasswordsController < BaseController
+  class User::PasswordsController < BaseController
     def update
-      case User::Password::Updating.call(user: current_user, **password_params)
+      case ::User::Password::Updating.call(user: current_user, **password_params)
       in Solid::Success
         render_json_with_success(status: :ok)
       in Solid::Failure(input:)

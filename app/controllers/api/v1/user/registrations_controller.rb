@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 module API::V1
-  class Users::RegistrationsController < BaseController
+  class User::RegistrationsController < BaseController
     skip_before_action :authenticate_user!, only: [:create]
 
     def create
-      case User::Registration.call(user_params)
+      case ::User::Registration.call(user_params)
       in Solid::Success(user:)
         render_json_with_success(status: :created, data: {access_token: user.token.access_token})
       in Solid::Failure(input:)
@@ -14,7 +14,7 @@ module API::V1
     end
 
     def destroy
-      result = User::AccountDeletion.call(user: current_user)
+      result = ::User::AccountDeletion.call(user: current_user)
 
       result.account_deleted? and return render_json_with_success(status: :ok)
     end

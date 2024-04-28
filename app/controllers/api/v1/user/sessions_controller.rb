@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 module API::V1
-  class Users::SessionsController < BaseController
+  class User::SessionsController < BaseController
     skip_before_action :authenticate_user!
 
     def create
-      case User::Authentication.call(user_params)
+      case ::User::Authentication.call(user_params)
       in Solid::Success(user:)
         render_json_with_success(status: :ok, data: {access_token: user.token.access_token})
       else

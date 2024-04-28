@@ -2,11 +2,11 @@
 
 require "test_helper"
 
-class API::V1::Users::TokensTest < ActionDispatch::IntegrationTest
+class API::V1::User::TokensTest < ActionDispatch::IntegrationTest
   test "#update responds with 401 when access token is invalid" do
     headers = [{}, api_v1_authorization_header(SecureRandom.hex(20))].sample
 
-    put(api_v1_users_tokens_url, headers:)
+    put(api_v1_user_tokens_url, headers:)
 
     assert_api_v1_response_with_error(:unauthorized)
   end
@@ -15,7 +15,7 @@ class API::V1::Users::TokensTest < ActionDispatch::IntegrationTest
     user = users(:one)
 
     assert_changes -> { user.token.reload.access_token } do
-      put(api_v1_users_tokens_url, headers: api_v1_authorization_header(user))
+      put(api_v1_user_tokens_url, headers: api_v1_authorization_header(user))
     end
 
     json_data = assert_api_v1_response_with_success(:ok)

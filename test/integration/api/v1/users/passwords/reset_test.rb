@@ -2,11 +2,11 @@
 
 require "test_helper"
 
-class API::V1::Users::Passwords::ResetTest < ActionDispatch::IntegrationTest
+class API::V1::User::Passwords::ResetTest < ActionDispatch::IntegrationTest
   test "#create responds with 400 when params are missing" do
     params = [{}, {user: {}}, {user: nil}].sample
 
-    post(api_v1_users_passwords_reset_url, params:)
+    post(api_v1_user_passwords_reset_url, params:)
 
     assert_api_v1_response_with_error(:bad_request)
   end
@@ -14,7 +14,7 @@ class API::V1::Users::Passwords::ResetTest < ActionDispatch::IntegrationTest
   test "#create responds with 200 when the email is not found" do
     email = "#{SecureRandom.hex}@email.com"
 
-    post(api_v1_users_passwords_reset_url, params: {user: {email:}})
+    post(api_v1_user_passwords_reset_url, params: {user: {email:}})
 
     assert_api_v1_response_with_success(:ok)
   end
@@ -23,7 +23,7 @@ class API::V1::Users::Passwords::ResetTest < ActionDispatch::IntegrationTest
     user = users(:one)
 
     emails = capture_emails do
-      post(api_v1_users_passwords_reset_url, params: {user: {email: user.email}})
+      post(api_v1_user_passwords_reset_url, params: {user: {email: user.email}})
     end
 
     assert_equal 1, emails.size
@@ -41,7 +41,7 @@ class API::V1::Users::Passwords::ResetTest < ActionDispatch::IntegrationTest
       }
     }
 
-    put(api_v1_users_passwords_reset_url, params:)
+    put(api_v1_user_passwords_reset_url, params:)
 
     assert_api_v1_response_with_error(:unprocessable_entity) => {message:}
 
@@ -59,7 +59,7 @@ class API::V1::Users::Passwords::ResetTest < ActionDispatch::IntegrationTest
       }
     }
 
-    put(api_v1_users_passwords_reset_url, params:)
+    put(api_v1_user_passwords_reset_url, params:)
 
     assert_api_v1_response_with_error(:unprocessable_entity)
   end
@@ -68,7 +68,7 @@ class API::V1::Users::Passwords::ResetTest < ActionDispatch::IntegrationTest
     user = users(:one)
 
     emails = capture_emails do
-      post(api_v1_users_passwords_reset_url, params: {user: {email: user.email}})
+      post(api_v1_user_passwords_reset_url, params: {user: {email: user.email}})
     end
 
     token = emails.first.parts.last.to_s.match(%r{/reset/(.*)/edit})[1]
@@ -81,7 +81,7 @@ class API::V1::Users::Passwords::ResetTest < ActionDispatch::IntegrationTest
       }
     }
 
-    put(api_v1_users_passwords_reset_url, params:)
+    put(api_v1_user_passwords_reset_url, params:)
 
     assert_api_v1_response_with_success(:ok)
   end
