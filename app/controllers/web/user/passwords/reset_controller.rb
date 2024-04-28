@@ -19,9 +19,9 @@ module Web::User
     def update
       case User::Password::Resetting.call(token: params[:token], **password_params)
       in Solid::Success
-        redirect_to new_web_guests_session_path, notice: "Your password has been reset successfully. Please sign in."
+        redirect_to new_web_guest_session_path, notice: "Your password has been reset successfully. Please sign in."
       in Solid::Failure(:user_not_found, _)
-        redirect_to new_web_guests_password_path, alert: "Invalid or expired token."
+        redirect_to new_web_guest_password_path, alert: "Invalid or expired token."
       in Solid::Failure(input:)
         render("web/user/passwords/reset", status: :unprocessable_entity, locals: {user: input})
       end
@@ -34,7 +34,7 @@ module Web::User
     end
 
     def invalid_or_expired_token
-      redirect_to new_web_guests_password_path, alert: "Invalid or expired token."
+      redirect_to new_web_guest_password_path, alert: "Invalid or expired token."
     end
   end
 end

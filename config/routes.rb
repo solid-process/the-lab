@@ -6,10 +6,10 @@ Rails.application.routes.draw do
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", :as => :rails_health_check
 
-  root "web/guests/sessions#new"
+  root "web/guest/sessions#new"
 
   namespace :web, path: "" do
-    namespace :guests do
+    namespace :guest do
       resources :sessions, only: [:new]
       resources :passwords, only: [:new, :create]
       resources :registrations, only: [:new]

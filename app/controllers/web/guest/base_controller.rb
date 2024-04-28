@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Web::Guests
+module Web::Guest
   class BaseController < Web::BaseController
     layout "web/guest"
 

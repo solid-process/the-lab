@@ -4,7 +4,7 @@ require "test_helper"
 
 class WebGuestSignUpTest < ActionDispatch::IntegrationTest
   test "guest signs up with invalid data" do
-    get(new_web_guests_registration_url)
+    get(new_web_guest_registration_url)
 
     assert_response :ok
 

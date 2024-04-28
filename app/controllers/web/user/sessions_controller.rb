@@ -22,7 +22,7 @@ module Web::User
     def destroy
       sign_out
 
-      redirect_to new_web_guests_session_path, notice: "You have successfully signed out."
+      redirect_to new_web_guest_session_path, notice: "You have successfully signed out."
     end
 
     private

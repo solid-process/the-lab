@@ -4,17 +4,17 @@ require "test_helper"
 
 class WebGuestResetPasswordTest < ActionDispatch::IntegrationTest
   test "guest tries to reset the password with an invalid email" do
-    get(new_web_guests_password_url)
+    get(new_web_guest_password_url)
 
     assert_response :ok
 
     assert_select("h2", "Forgot your password?")
 
     assert_enqueued_emails 0 do
-      post(web_guests_passwords_url, params: {user: {email: "foo@"}})
+      post(web_guest_passwords_url, params: {user: {email: "foo@"}})
     end
 
-    assert_redirected_to new_web_guests_session_url
+    assert_redirected_to new_web_guest_session_url
 
     follow_redirect!
 
@@ -25,14 +25,14 @@ class WebGuestResetPasswordTest < ActionDispatch::IntegrationTest
 
   test "guest tries to the reset password with an existing email" do
     emails = capture_emails do
-      post(web_guests_passwords_url, params: {user: {email: users(:one).email}})
+      post(web_guest_passwords_url, params: {user: {email: users(:one).email}})
     end
 
     assert_equal 1, emails.size
 
     assert_equal "Reset your password", emails.first.subject
 
-    assert_redirected_to new_web_guests_session_url
+    assert_redirected_to new_web_guest_session_url
 
     follow_redirect!
 
@@ -44,7 +44,7 @@ class WebGuestResetPasswordTest < ActionDispatch::IntegrationTest
   test "guest uses an invalid token to reset the password" do
     get(edit_web_user_passwords_reset_url(token: SecureRandom.hex))
 
-    assert_redirected_to new_web_guests_password_url
+    assert_redirected_to new_web_guest_password_url
 
     follow_redirect!
 
@@ -57,9 +57,9 @@ class WebGuestResetPasswordTest < ActionDispatch::IntegrationTest
     user = users(:one)
 
     emails = capture_emails do
-      post(web_guests_passwords_url, params: {user: {email: user.email}})
+      post(web_guest_passwords_url, params: {user: {email: user.email}})
 
-      assert_redirected_to new_web_guests_session_url
+      assert_redirected_to new_web_guest_session_url
     end
 
     assert_equal 1, emails.size
@@ -86,9 +86,9 @@ class WebGuestResetPasswordTest < ActionDispatch::IntegrationTest
     user = users(:one)
 
     emails = capture_emails do
-      post(web_guests_passwords_url, params: {user: {email: user.email}})
+      post(web_guest_passwords_url, params: {user: {email: user.email}})
 
-      assert_redirected_to new_web_guests_session_url
+      assert_redirected_to new_web_guest_session_url
     end
 
     assert_equal 1, emails.size
@@ -103,7 +103,7 @@ class WebGuestResetPasswordTest < ActionDispatch::IntegrationTest
 
     put(web_user_passwords_reset_url(token:), params:)
 
-    assert_redirected_to new_web_guests_session_url
+    assert_redirected_to new_web_guest_session_url
 
     follow_redirect!
 

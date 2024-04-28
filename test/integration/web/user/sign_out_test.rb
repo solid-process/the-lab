@@ -16,7 +16,7 @@ class WebUserSignOutTest < ActionDispatch::IntegrationTest
 
     delete(web_user_sessions_url)
 
-    assert_redirected_to new_web_guests_session_path
+    assert_redirected_to new_web_guest_session_path
 
     follow_redirect!
 

@@ -55,7 +55,7 @@ class ActionDispatch::IntegrationTest
   end
 
   def assert_web_unauthorized_access
-    assert_redirected_to new_web_guests_session_path
+    assert_redirected_to new_web_guest_session_path
 
     follow_redirect!
 
