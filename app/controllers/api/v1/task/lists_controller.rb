@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module API::V1
-  class TaskListsController < BaseController
+  class Task::ListsController < BaseController
     TASK_LIST_ATTRIBUTES = [:id, :name, :created_at, :updated_at].freeze
 
     def index

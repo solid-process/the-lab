@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class API::V1::TaskItemsCreateTest < ActionDispatch::IntegrationTest
+class API::V1::Task::ItemsCreateTest < ActionDispatch::IntegrationTest
   test "#create responds with 401 when access token is invalid" do
     user = users(:one)
     params = {task: {name: "Foo"}}

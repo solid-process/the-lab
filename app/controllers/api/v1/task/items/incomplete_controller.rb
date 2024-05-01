@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module API::V1
-  class TaskItems::IncompleteController < BaseController
-    include TaskItems::Concerns::Rendering
+  class Task::Items::IncompleteController < BaseController
+    include Task::Items::Concerns::Rendering
 
     def update
       case Account::Task::Item::Incomplete.call(member: current_member, id: params[:id])

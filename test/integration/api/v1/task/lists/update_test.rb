@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class API::V1::TaskListsUpdateTest < ActionDispatch::IntegrationTest
+class API::V1::Task::ListsUpdateTest < ActionDispatch::IntegrationTest
   test "#update responds with 401 when access token is invalid" do
     headers = [{}, api_v1_authorization_header(SecureRandom.hex(20))].sample
 

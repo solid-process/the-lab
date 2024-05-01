@@ -12,7 +12,7 @@ class WebGuestSignInTest < ActionDispatch::IntegrationTest
 
     params = {user: {email: "foo@", password: "123"}}
 
-    post(web_user_sessions_url, params:)
+    post(web_guest_sessions_url, params:)
 
     assert_response :unprocessable_entity
 
@@ -24,7 +24,7 @@ class WebGuestSignInTest < ActionDispatch::IntegrationTest
   test "guest signs in with valid data" do
     params = {user: {email: users(:one).email, password: "123123123"}}
 
-    post(web_user_sessions_url, params:)
+    post(web_guest_sessions_url, params:)
 
     assert_redirected_to web_task_items_url
 

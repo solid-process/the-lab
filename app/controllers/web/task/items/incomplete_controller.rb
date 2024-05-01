@@ -5,7 +5,7 @@ module Web::Task
     def index
       case Account::Task::Item::Listing.call(filter: "incomplete", member: current_member)
       in Solid::Success(tasks:)
-        render("web/task/items", locals: {tasks:, scope: "incomplete"})
+        render("web/task/items/index", locals: {tasks:, scope: "incomplete"})
       end
     end
 

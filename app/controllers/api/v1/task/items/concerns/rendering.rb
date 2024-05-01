@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module API::V1
-  module TaskItems::Concerns::Rendering
+  module Task::Items::Concerns::Rendering
     TASK_ATTRIBUTES = [:id, :name, :completed_at, :created_at, :updated_at, :task_list_id].freeze
 
     private

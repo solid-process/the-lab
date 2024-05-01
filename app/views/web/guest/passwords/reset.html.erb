@@ -3,7 +3,7 @@
 <main>
   <h2>Reset your password</h2>
 
-  <%= form_with(model: user, scope: :user, url: web_user_passwords_reset_path(token: params[:token]), method: :put) do |f| %>
+  <%= form_with(model: user, scope: :user, url: web_guest_passwords_reset_path(token: params[:token]), method: :put) do |f| %>
     <% if f.object.errors.any? %>
       <ul>
         <% f.object.errors.full_messages.each do |message| %>

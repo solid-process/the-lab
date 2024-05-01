@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class API::V1::TaskListsDestroyTest < ActionDispatch::IntegrationTest
+class API::V1::Task::ListsDestroyTest < ActionDispatch::IntegrationTest
   test "#destroy responds with 401 when access token is invalid" do
     headers = [{}, api_v1_authorization_header(SecureRandom.hex(20))].sample
 

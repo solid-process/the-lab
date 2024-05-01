@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class API::V1::TaskItemsDestroyTest < ActionDispatch::IntegrationTest
+class API::V1::Task::ItemsDestroyTest < ActionDispatch::IntegrationTest
   test "#destroy responds with 401 when access token is invalid" do
     user = users(:one)
     task = task_items(:one)
@@ -17,7 +17,7 @@ class API::V1::TaskItemsDestroyTest < ActionDispatch::IntegrationTest
     user = users(:one)
     task = task_items(:one)
 
-    url = api_v1_task_list_item_url(task_list_id: TaskList.maximum(:id) + 1, id: task.id)
+    url = api_v1_task_list_item_url(list_id: TaskList.maximum(:id) + 1, id: task.id)
 
     delete(url, headers: api_v1_authorization_header(user))
 
@@ -27,7 +27,7 @@ class API::V1::TaskItemsDestroyTest < ActionDispatch::IntegrationTest
   test "#destroy responds with 404 when task is not found" do
     user = users(:one)
 
-    url = api_v1_task_list_item_url(task_list_id: user.inbox, id: TaskItem.maximum(:id) + 1)
+    url = api_v1_task_list_item_url(list_id: user.inbox, id: TaskItem.maximum(:id) + 1)
 
     delete(url, headers: api_v1_authorization_header(user))
 

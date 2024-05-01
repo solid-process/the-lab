@@ -10,21 +10,19 @@ Rails.application.routes.draw do
 
   namespace :web, path: "" do
     namespace :guest do
-      resources :sessions, only: [:new]
+      resources :sessions, only: [:new, :create]
+      resources :registrations, only: [:new, :create]
       resources :passwords, only: [:new, :create]
-      resources :registrations, only: [:new]
-    end
-
-    namespace :user do
-      resource :sessions, only: [:destroy, :create]
-
-      resource :passwords, only: [:update]
       namespace :passwords do
         resources :reset, only: [:edit, :update], param: :token
       end
+    end
 
+    namespace :user do
       resource :tokens, only: [:update]
-      resource :registrations, only: [:create, :destroy]
+      resource :sessions, only: [:destroy]
+      resource :passwords, only: [:update]
+      resource :registrations, only: [:destroy]
 
       namespace :settings do
         resource :api, only: [:show], controller: "api"
@@ -66,11 +64,13 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :task_lists, only: [:index, :create, :update, :destroy] do
-        resources :task_items, path: "items", as: "items", only: [:index, :create, :update, :destroy] do
-          member do
-            put :complete, to: "task_items/complete#update"
-            put :incomplete, to: "task_items/incomplete#update"
+      namespace :task do
+        resources :lists, only: [:index, :create, :update, :destroy] do
+          resources :items, only: [:index, :create, :update, :destroy] do
+            member do
+              put :complete, to: "items/complete#update"
+              put :incomplete, to: "items/incomplete#update"
+            end
           end
         end
       end

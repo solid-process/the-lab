@@ -1,11 +1,7 @@
 # frozen_string_literal: true
 
-module Web::User
+module Web::Guest
   class Passwords::ResetController < BaseController
-    layout "web/guest"
-
-    skip_before_action :authenticate_user!
-
     def edit
       token = params[:token]
 
@@ -13,7 +9,7 @@ module Web::User
 
       input = User::Password::Resetting::Input.new(token:)
 
-      render("web/user/passwords/reset", locals: {user: input})
+      render("web/guest/passwords/reset", locals: {user: input})
     end
 
     def update
@@ -23,7 +19,7 @@ module Web::User
       in Solid::Failure(:user_not_found, _)
         redirect_to new_web_guest_password_path, alert: "Invalid or expired token."
       in Solid::Failure(input:)
-        render("web/user/passwords/reset", status: :unprocessable_entity, locals: {user: input})
+        render("web/guest/passwords/reset", status: :unprocessable_entity, locals: {user: input})
       end
     end
 

@@ -3,13 +3,13 @@
 require "test_helper"
 
 class WebUserSettingsAccountDeletionTest < ActionDispatch::IntegrationTest
-  test "guest signs out" do
+  test "guest account deletion" do
     delete(web_user_registrations_url)
 
     assert_web_unauthorized_access
   end
 
-  test "user signs out" do
+  test "user account deletion" do
     user = users(:one)
 
     web_sign_in(user)

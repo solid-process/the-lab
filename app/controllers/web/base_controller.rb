@@ -35,10 +35,6 @@ class Web::BaseController < ApplicationController
     @current_member ||= Account::Member.fetch_by(user_id: current_user_id, task_list_id: current_task_list_id)
   end
 
-  def current_account
-    current_member.account
-  end
-
   def current_user_id=(id)
     session[:user_id] = id
   end

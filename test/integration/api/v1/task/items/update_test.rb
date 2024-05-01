@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class API::V1::TaskItemsUpdateTest < ActionDispatch::IntegrationTest
+class API::V1::Task::ItemsUpdateTest < ActionDispatch::IntegrationTest
   test "#update responds with 401 when access token is invalid" do
     user = users(:one)
     task = task_items(:one)
@@ -29,7 +29,7 @@ class API::V1::TaskItemsUpdateTest < ActionDispatch::IntegrationTest
     task = task_items(:one)
     params = {task: {name: "Foo"}}
 
-    url = api_v1_task_list_item_url(task_list_id: TaskList.maximum(:id) + 1, id: task.id)
+    url = api_v1_task_list_item_url(list_id: TaskList.maximum(:id) + 1, id: task.id)
 
     put(url, params:, headers: api_v1_authorization_header(user))
 
@@ -40,7 +40,7 @@ class API::V1::TaskItemsUpdateTest < ActionDispatch::IntegrationTest
     user = users(:one)
     params = {task: {name: "Foo"}}
 
-    url = api_v1_task_list_item_url(task_list_id: user.inbox, id: TaskItem.maximum(:id) + 1)
+    url = api_v1_task_list_item_url(list_id: user.inbox, id: TaskItem.maximum(:id) + 1)
 
     put(url, params:, headers: api_v1_authorization_header(user))
 

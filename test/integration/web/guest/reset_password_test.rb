@@ -42,7 +42,7 @@ class WebGuestResetPasswordTest < ActionDispatch::IntegrationTest
   end
 
   test "guest uses an invalid token to reset the password" do
-    get(edit_web_user_passwords_reset_url(token: SecureRandom.hex))
+    get(edit_web_guest_passwords_reset_url(token: SecureRandom.hex))
 
     assert_redirected_to new_web_guest_password_url
 
@@ -66,13 +66,13 @@ class WebGuestResetPasswordTest < ActionDispatch::IntegrationTest
 
     token = emails.first.parts.last.to_s.match(%r{/reset/(.*)/edit})[1]
 
-    get(edit_web_user_passwords_reset_url(token:))
+    get(edit_web_guest_passwords_reset_url(token:))
 
     assert_response :ok
 
     params = {user: {password: "321", password_confirmation: "123"}}
 
-    put(web_user_passwords_reset_url(token:), params:)
+    put(web_guest_passwords_reset_url(token:), params:)
 
     assert_response :unprocessable_entity
 
@@ -95,13 +95,13 @@ class WebGuestResetPasswordTest < ActionDispatch::IntegrationTest
 
     token = emails.first.parts.last.to_s.match(%r{/reset/(.*)/edit})[1]
 
-    get(edit_web_user_passwords_reset_url(token:))
+    get(edit_web_guest_passwords_reset_url(token:))
 
     assert_response :ok
 
     params = {user: {password: "321321321", password_confirmation: "321321321"}}
 
-    put(web_user_passwords_reset_url(token:), params:)
+    put(web_guest_passwords_reset_url(token:), params:)
 
     assert_redirected_to new_web_guest_session_url
 

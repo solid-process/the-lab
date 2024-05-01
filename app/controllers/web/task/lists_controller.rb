@@ -7,7 +7,7 @@ module Web::Task
 
       result.value => {relation: task_lists}
 
-      render("web/task/lists", locals: {task_lists:})
+      render("web/task/lists/index", locals: {task_lists:})
     end
 
     def new

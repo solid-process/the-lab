@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class API::V1::TaskItemsIncompleteTest < ActionDispatch::IntegrationTest
+class API::V1::Task::ItemsIncompleteTest < ActionDispatch::IntegrationTest
   test "#update responds with 401 when access token is invalid" do
     user = users(:one)
     task = task_items(:one)
@@ -17,7 +17,7 @@ class API::V1::TaskItemsIncompleteTest < ActionDispatch::IntegrationTest
     user = users(:one)
     task = task_items(:one)
 
-    url = incomplete_api_v1_task_list_item_url(task_list_id: TaskList.maximum(:id) + 1, id: task.id)
+    url = incomplete_api_v1_task_list_item_url(list_id: TaskList.maximum(:id) + 1, id: task.id)
 
     put(url, headers: api_v1_authorization_header(user))
 
@@ -27,7 +27,7 @@ class API::V1::TaskItemsIncompleteTest < ActionDispatch::IntegrationTest
   test "#update responds with 404 when task is not found" do
     user = users(:one)
 
-    url = incomplete_api_v1_task_list_item_url(task_list_id: user.inbox, id: TaskItem.maximum(:id) + 1)
+    url = incomplete_api_v1_task_list_item_url(list_id: user.inbox, id: TaskItem.maximum(:id) + 1)
 
     put(url, headers: api_v1_authorization_header(user))
 
