@@ -30,6 +30,11 @@ gem "tzinfo-data", platforms: %i[windows jruby]
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
 
+# OpenTelemetry tracing
+gem "opentelemetry-sdk"
+gem "opentelemetry-instrumentation-all"
+gem "opentelemetry-exporter-otlp"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[mri windows]
